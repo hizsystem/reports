@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모수 확보 중간 보고 — 2026.04.15</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif; background: #f4f7f9; color: #1a1b18; line-height: 1.7; font-size: 14px; padding-top: 56px; }
+
+  /* Toolbar */
+  .toolbar { position: fixed; top: 0; left: 0; right: 0; height: 56px; background: #1a1b18; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; z-index: 100; }
+  .toolbar-brand { color: #fff; font-weight: 700; font-size: 15px; letter-spacing: -0.3px; }
+  .toolbar-brand span { color: #a2c7e2; }
+  .toolbar-meta { color: rgba(255,255,255,.5); font-size: 12px; }
+
+  /* Container */
+  .container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  /* Report Header */
+  .report-header { background: #fff; border-radius: 12px; padding: 40px; border: 1px solid #e8edf1; margin-bottom: 24px; }
+  .report-badge { display: inline-block; padding: 4px 12px; background: #1a1b18; color: #a2c7e2; font-size: 11px; letter-spacing: 1px; border-radius: 4px; font-weight: 600; text-transform: uppercase; }
+  .report-title { font-size: 24px; font-weight: 700; margin-top: 16px; line-height: 1.4; }
+  .report-subtitle { font-size: 15px; color: #636569; margin-top: 8px; }
+  .meta-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e8edf1; }
+  .meta-item .label { font-size: 11px; color: #636569; font-weight: 500; letter-spacing: 0.5px; }
+  .meta-item .value { font-size: 14px; font-weight: 600; margin-top: 2px; }
+
+  /* Core Answer */
+  .core-answer { background: #1a1b18; color: #fff; border-radius: 12px; padding: 32px 40px; margin-bottom: 20px; text-align: center; }
+  .core-answer .question { font-size: 13px; color: #a2c7e2; font-weight: 600; letter-spacing: 1px; margin-bottom: 12px; }
+  .core-answer .answer { font-size: 22px; font-weight: 700; line-height: 1.5; }
+  .core-answer .answer em { font-style: normal; color: #a2c7e2; }
+
+  /* Section */
+  .section { background: #fff; border-radius: 12px; padding: 32px 40px; margin-bottom: 20px; border: 1px solid #e8edf1; }
+  .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e8edf1; }
+  .section-number { width: 32px; height: 32px; border-radius: 8px; background: #1a1b18; color: #a2c7e2; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+  .section-title { font-size: 17px; font-weight: 600; }
+
+  /* KPI cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0; }
+  .kpi-card { background: #f8fafb; border-radius: 10px; padding: 20px; text-align: center; border: 1px solid #e8edf1; }
+  .kpi-card .label { font-size: 11px; color: #636569; font-weight: 500; letter-spacing: 0.5px; }
+  .kpi-card .value { font-size: 24px; font-weight: 700; margin-top: 6px; }
+  .kpi-card .sub { font-size: 12px; color: #636569; margin-top: 4px; }
+  .kpi-card.highlight { background: #1a1b18; }
+  .kpi-card.highlight .label { color: #a2c7e2; }
+  .kpi-card.highlight .value { color: #fff; }
+  .kpi-card.highlight .sub { color: rgba(255,255,255,.6); }
+
+  /* Funnel */
+  .funnel-wrap { margin: 24px auto; max-width: 680px; }
+  .funnel-row { display: flex; align-items: center; gap: 20px; }
+  .funnel-bar-wrap { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 340px; }
+  .funnel-bar { width: 100%; text-align: center; padding: 18px 12px; color: #fff; }
+  .funnel-bar:nth-child(1) { background: #1a1b18; border-radius: 10px 10px 0 0; width: 100%; }
+  .funnel-bar:nth-child(2) { background: #2d3748; width: 82%; }
+  .funnel-bar:nth-child(3) { background: #4a6fa5; width: 62%; }
+  .funnel-bar:nth-child(4) { background: #a2c7e2; color: #1a1b18; width: 42%; border-radius: 0 0 10px 10px; }
+  .funnel-bar .f-label { font-size: 10px; font-weight: 600; letter-spacing: 1px; opacity: 0.7; }
+  .funnel-bar .f-title { font-size: 16px; font-weight: 700; margin-top: 2px; }
+  .funnel-details { display: flex; flex-direction: column; width: 100%; }
+  .funnel-detail-row { display: flex; align-items: center; gap: 16px; padding: 16px 0; border-bottom: 1px solid #f0f2f5; }
+  .funnel-detail-row:last-child { border-bottom: none; }
+  .funnel-detail-row .fd-step { font-size: 11px; font-weight: 700; color: #a2c7e2; background: #1a1b18; padding: 3px 10px; border-radius: 4px; flex-shrink: 0; min-width: 44px; text-align: center; }
+  .funnel-detail-row .fd-text { font-size: 13px; color: #636569; line-height: 1.5; }
+  .funnel-detail-row .fd-text strong { color: #1a1b18; }
+  .funnel-detail-row .fd-num { font-size: 20px; font-weight: 700; margin-left: auto; flex-shrink: 0; }
+
+  /* Comparison */
+  .compare-grid { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0; margin: 16px 0; align-items: stretch; }
+  .compare-card { border-radius: 10px; padding: 24px; border: 1px solid #e8edf1; }
+  .compare-card.before { background: #fef2f2; border-color: #fca5a5; }
+  .compare-card.after { background: #f0fdf4; border-color: #86efac; }
+  .compare-arrow { display: flex; align-items: center; justify-content: center; font-size: 24px; color: #636569; }
+  .compare-label { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 12px; }
+  .compare-label.red { color: #cf222e; }
+  .compare-label.green { color: #2ea043; }
+  .compare-row { font-size: 13px; line-height: 2; }
+  .compare-row strong { font-weight: 700; }
+
+  /* Timeline */
+  .timeline { margin: 16px 0; }
+  .timeline-item { display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid #f0f2f5; }
+  .timeline-item:last-child { border-bottom: none; }
+  .timeline-date { width: 80px; flex-shrink: 0; font-size: 13px; font-weight: 700; color: #1a1b18; }
+  .timeline-content { flex: 1; }
+  .timeline-title { font-size: 14px; font-weight: 600; }
+  .timeline-desc { font-size: 12px; color: #636569; margin-top: 2px; }
+  .timeline-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 600; margin-left: 8px; }
+  .badge-done { background: #2ea043; color: #fff; }
+  .badge-now { background: #d4a017; color: #fff; }
+  .badge-next { background: #e8edf1; color: #636569; }
+
+  /* Info boxes */
+  .info-box { background: #f0f7ff; border-left: 4px solid #a2c7e2; border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0; font-size: 13px; line-height: 1.7; }
+  .highlight-box { background: #fff8e1; border-left: 4px solid #f5a623; border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0; font-size: 13px; line-height: 1.7; }
+  .success-box { background: #f0fdf4; border-left: 4px solid #2ea043; border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0; font-size: 13px; line-height: 1.7; }
+  .risk-box { background: #fef2f2; border-left: 4px solid #cf222e; border-radius: 0 8px 8px 0; padding: 16px 20px; margin: 16px 0; font-size: 13px; line-height: 1.7; }
+
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+  th { background: #f8fafb; padding: 10px 14px; text-align: left; font-weight: 600; border-bottom: 2px solid #e8edf1; font-size: 12px; }
+  td { padding: 10px 14px; border-bottom: 1px solid #f0f2f5; }
+  tr:hover td { background: #fafbfc; }
+
+  /* Priority box */
+  .priority-box { background: #1a1b18; color: #fff; border-radius: 12px; padding: 32px 40px; margin-bottom: 20px; }
+  .priority-box h2 { color: #a2c7e2; font-size: 17px; margin-bottom: 20px; }
+  .priority-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+  .priority-item:last-child { margin-bottom: 0; }
+  .priority-num { width: 28px; height: 28px; border-radius: 50%; background: #a2c7e2; color: #1a1b18; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+  .priority-text { font-size: 14px; line-height: 1.6; }
+  .priority-text strong { color: #a2c7e2; }
+
+  /* Footer */
+  .report-footer { text-align: center; padding: 24px; font-size: 12px; color: #636569; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; padding-top: 0; }
+    .toolbar { display: none; }
+    .section, .priority-box, .core-answer { break-inside: avoid; }
+    .priority-box { background: #333 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .core-answer { background: #333 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .meta-grid { grid-template-columns: repeat(2, 1fr); }
+    .kpi-grid { grid-template-columns: 1fr; }
+    .funnel-row { flex-direction: column; }
+    .funnel-bar-wrap { width: 100%; max-width: 340px; }
+    .compare-grid { grid-template-columns: 1fr; gap: 12px; }
+    .compare-arrow { transform: rotate(90deg); }
+    .section { padding: 24px 20px; }
+    .report-header { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="toolbar-brand">brand<span>rise</span></div>
+  <div class="toolbar-meta">내부 보고용</div>
+</div>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="report-header">
+    <div class="report-badge">MID-CHECK REPORT &mdash; D+6</div>
+    <h1 class="report-title">모수 확보 중간 보고</h1>
+    <p class="report-subtitle">4/10 ~ 4/15 (6일) 실행 결과 및 다음 액션</p>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <div class="label">보고일</div>
+        <div class="value">2026. 04. 15</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">담당</div>
+        <div class="value">우성민</div>
+      </div>
+      <div class="meta-item">
+        <div class="label">보고 대상</div>
+        <div class="value">이상학 부회장님</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Answer -->
+  <div class="core-answer">
+    <div class="question">6일간의 결론</div>
+    <div class="answer">광고는 되고 있다. 문제는 <em>랜딩</em>이었고,<br>고쳤고, <em>첫 신호</em>가 나왔다.</div>
+  </div>
+
+  <!-- Section 1: 핵심 지표 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <div class="section-title">핵심 지표 (6일 누적)</div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="label">총 지출</div>
+        <div class="value">&yen;27,726</div>
+        <div class="sub">일예산 5만 대비 9.2% 소진</div>
+      </div>
+      <div class="kpi-card">
+        <div class="label">클릭 &rarr; 랜딩뷰</div>
+        <div class="value">169 &rarr; 132</div>
+        <div class="sub">CTR 2.5% &middot; CPC &yen;164</div>
+      </div>
+      <div class="kpi-card highlight">
+        <div class="label">퍼널 완주</div>
+        <div class="value">2건</div>
+        <div class="sub">폼 제거 후 첫 발생</div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>CTR 2.5%</strong>는 B2B 인스타그램 광고 기준 상위권. 소재 3개 모두 기준치 이상으로 워킹.
+    </div>
+  </div>
+
+  <!-- Section 2: 퍼널 Before vs After -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <div class="section-title">퍼널: 무엇이 바뀌었나</div>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card before">
+        <div class="compare-label red">BEFORE (4/10~12)</div>
+        <div class="compare-row">광고 클릭 <strong>134</strong></div>
+        <div class="compare-row">랜딩 도착 <strong>88</strong></div>
+        <div class="compare-row">이메일 입력 폼 &rarr; <strong style="color:#cf222e;">93% 이탈</strong></div>
+        <div class="compare-row">진단 시작 <strong style="color:#cf222e;">0명</strong></div>
+        <div class="compare-row">전환 <strong style="color:#cf222e;">0건</strong></div>
+      </div>
+      <div class="compare-arrow">&rarr;</div>
+      <div class="compare-card after">
+        <div class="compare-label green">AFTER (4/13~14)</div>
+        <div class="compare-row">광고 클릭 <strong>35</strong></div>
+        <div class="compare-row">랜딩 도착 <strong>32</strong></div>
+        <div class="compare-row">폼 제거 &rarr; <strong style="color:#2ea043;">바로 시작</strong></div>
+        <div class="compare-row">결과 페이지 <strong style="color:#2ea043;">2명</strong></div>
+        <div class="compare-row">상담 예약 <strong style="color:#2ea043;">2건</strong></div>
+      </div>
+    </div>
+
+    <div class="success-box">
+      <strong>이메일 폼 제거 한 가지 변경</strong>으로 퍼널이 뚫림.<br>
+      진단을 시작한 유저는 끝까지 완주 &mdash; 설문 자체는 정상 작동.
+    </div>
+  </div>
+
+  <!-- Section 3: 광고 성과 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <div class="section-title">광고 성과</div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>소재</th><th>CTR</th><th>CPC</th><th>상태</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>왜안돼</strong></td><td>3.02%</td><td>&yen;125</td><td style="color:#2ea043;">최고 성과</td></tr>
+        <tr><td><strong>솔직히</strong></td><td>2.44%</td><td>&yen;189</td><td>안정적</td></tr>
+        <tr><td><strong>공통점</strong></td><td>&mdash;</td><td>&mdash;</td><td style="color:#636569;">노출 56회, 판단 불가</td></tr>
+      </tbody>
+    </table>
+
+    <table>
+      <thead>
+        <tr><th>설정</th><th>v1 (4/10~12)</th><th>v2 (4/13~)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>최적화 목표</td><td>링크 클릭</td><td><strong>랜딩페이지 조회</strong></td></tr>
+        <tr><td>Advantage+</td><td>OFF</td><td><strong>ON</strong></td></tr>
+        <tr><td>타겟 연령</td><td>25-50세</td><td><strong>18-65세 (확대)</strong></td></tr>
+        <tr><td>예산 소진율</td><td>12%</td><td><strong>38%</strong> (3배 개선)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box">
+      <strong>예산 소진율 9.2%:</strong> 일예산 5만원 중 평균 4,600원만 소진. v2 전환 후 38%로 개선 중이나 아직 학습 기간. Meta가 최적의 유저를 찾는 중.
+    </div>
+  </div>
+
+  <!-- Section 4: 6일간 실행 -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <div class="section-title">6일간 실행한 것</div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-date">4/10</div>
+        <div class="timeline-content">
+          <div class="timeline-title">v1 광고 집행 시작 <span class="timeline-badge badge-done">완료</span></div>
+          <div class="timeline-desc">소재 5개, 일예산 ₩7,143, Advantage+ OFF</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">4/12</div>
+        <div class="timeline-content">
+          <div class="timeline-title">Meta Pixel 4단계 퍼널 설치 <span class="timeline-badge badge-done">완료</span></div>
+          <div class="timeline-desc">ViewContent → InitiateCheckout → CompleteRegistration → Schedule</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">4/12</div>
+        <div class="timeline-content">
+          <div class="timeline-title">결과 페이지 크래시 수정 <span class="timeline-badge badge-done">완료</span></div>
+          <div class="timeline-desc">useEffect Hook 위반으로 결과 페이지 진입 불가 → 수정</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">4/13</div>
+        <div class="timeline-content">
+          <div class="timeline-title">이메일 입력 폼 제거 <span class="timeline-badge badge-done">완료</span></div>
+          <div class="timeline-desc">93% 이탈 원인 → 익명 세션으로 전환, 진입 장벽 제거</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">4/13</div>
+        <div class="timeline-content">
+          <div class="timeline-title">v2 캠페인 런칭 <span class="timeline-badge badge-done">완료</span></div>
+          <div class="timeline-desc">최적화 목표 변경 + Advantage+ ON + 타겟 확대</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">4/14</div>
+        <div class="timeline-content">
+          <div class="timeline-title">첫 퍼널 완주 유저 확인 <span class="timeline-badge badge-done">완료</span></div>
+          <div class="timeline-desc">결과 페이지 2조회, 상담 예약 2조회 (GA4 확인)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Priority: 다음 액션 -->
+  <div class="priority-box">
+    <h2>다음 액션</h2>
+    <div class="priority-item">
+      <div class="priority-num">1</div>
+      <div class="priority-text">
+        <strong>랜딩 페이지 개선</strong><br>
+        광고 카피와 랜딩 헤드라인 메시지 일치 + 결과 페이지에 상담 CTA 고정 바 추가
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num">2</div>
+      <div class="priority-text">
+        <strong>4/16 v2 성과 판단</strong><br>
+        풀 3일 데이터로 소재 쏠림 대응 결정. 랜딩뷰 50건+ 쌓이면 전환 캠페인 테스트
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="priority-num">3</div>
+      <div class="priority-text">
+        <strong>진단 완료 알림 복구</strong><br>
+        Vercel 슬랙 웹훅 설정 → 진단 완료 시 즉시 알림 수신 → 리드 대응 속도 개선
+      </div>
+    </div>
+  </div>
+
+  <div class="report-footer">
+    brandrise &mdash; 내부 보고용 &middot; 2026. 04. 15
+  </div>
+
+</div>
+
+</body>
+</html>
